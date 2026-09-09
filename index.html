@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>大阪-京都GO 🍮</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            jp: {
+              bg: '#F8F9FA',
+              card: '#FFFFFF',
+              border: '#EAEAEA',
+              subtext: '#8E8E93',
+            },
+            pudding: {
+              DEFAULT: '#FBE183', // 布丁黃
+              light: '#FFFDF5',
+              dark: '#F3CE49',
+            },
+            cocoa: {
+              DEFAULT: '#4A3828', // 深可可焙茶色
+              light: '#6E5540',
+              soft: '#8C735E',
+            },
+            pochacco: {
+              DEFAULT: '#8CCAB6', // 薄荷綠
+              light: '#EBF6F2',
+              dark: '#4D9480',
+              blue: '#E8F3FA',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"Hiragino Sans"', '"Noto Sans TC"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Font Awesome 圖標庫 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    body {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .tab-active {
+      background-color: #4A3828 !important;
+      color: #FFFFFF !important;
+      border-color: #4A3828 !important;
+      box-shadow: 0 4px 15px rgba(74, 56, 40, 0.22) !important;
+    }
+    
+    .tab-active span {
+      color: #FFFFFF !important;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 30px 0 rgba(112, 78, 45, 0.05);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-anim {
+      animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="bg-jp-bg text-cocoa font-sans pb-16 antialiased selection:bg-pudding relative min-h-screen">
+
+  <!-- 背景光暈圓球與微圖案 -->
+  <div class="fixed -top-20 -left-20 w-80 h-80 bg-pudding/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="fixed top-1/3 -right-24 w-72 h-72 bg-pochacco/25 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="fixed top-24 right-5 text-pudding/40 text-3xl pointer-events-none select-none -z-10">✦</div>
+  <div class="fixed top-2/3 left-4 text-pochacco/35 text-2xl pointer-events-none select-none -z-10">☘</div>
+
+  <!-- 1. 頂部毛玻璃 Header ("大阪-京都GO" 置中，右側為清單按鈕) -->
+  <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-white/80 px-4 py-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+    <div class="max-w-md mx-auto relative flex items-center justify-between">
+      
+      <!-- 所在地天氣 -->
+      <div id="local-weather" class="flex items-center gap-1 bg-pochacco-light/80 backdrop-blur-md border border-pochacco/30 px-2.5 py-1 text-[10px] text-teal-900 font-bold rounded-full shadow-2xs">
+        <i class="fa-solid fa-location-crosshairs text-[9px] text-pochacco-dark"></i>
+        <span id="local-weather-text">定位中...</span>
+      </div>
+
+      <!-- 中央置中大標題 -->
+      <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5 whitespace-nowrap">
+        <span class="text-base">🍮</span>
+        <h1 class="text-sm font-black text-cocoa tracking-wider">大阪-京都GO</h1>
+        <!-- 帕恰狗頭像 -->
+        <span class="inline-block w-4 h-4 align-middle">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <path d="M28,45 C25,25 75,25 72,45 C86,52 86,75 70,82 C55,87 45,87 30,82 C14,75 14,52 28,45 Z" fill="#FFFFFF" stroke="#221E1F" stroke-width="4.5" stroke-linejoin="round"/>
+            <path d="M26,38 C18,22 10,12 18,6 C26,1 36,15 33,32 Z" fill="#221E1F"/>
+            <path d="M70,36 C82,38 98,46 95,58 C91,66 74,54 68,46 Z" fill="#221E1F"/>
+            <path d="M42,20 C42,14 47,15 47,19 M50,18 C52,12 57,13 56,18 M58,21 C62,16 66,18 64,22" fill="none" stroke="#221E1F" stroke-width="4" stroke-linecap="round"/>
+            <ellipse cx="38" cy="55" rx="3.5" ry="5.5" fill="#221E1F"/>
+            <ellipse cx="62" cy="55" rx="3.5" ry="5.5" fill="#221E1F"/>
+            <ellipse cx="50" cy="62" rx="4.5" ry="3.5" fill="#221E1F"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- 右側清單按鈕 -->
+      <button onclick="openPrepModal()" class="text-[11px] font-bold text-cocoa bg-white/90 hover:bg-pudding-light border border-white px-3 py-1 flex items-center gap-1 transition rounded-full active:scale-95 shadow-xs">
+        <i class="fa-solid fa-list-check text-[10px] text-cocoa-soft"></i> 清單
+      </button>
+
+    </div>
+  </header>
+
+  <!-- 主容器 -->
+  <main class="max-w-md mx-auto px-3.5 pt-3 relative z-10">
+
+    <!-- 2. 中間五天純日期切換欄 (無清單、無備案) -->
+    <div class="grid grid-cols-5 gap-2 mb-3">
+      <button onclick="switchTab('day1')" id="tab-btn-day1" class="tab-btn py-2 text-center bg-white/70 backdrop-blur-md text-cocoa border border-white/90 shadow-2xs transition-all rounded-2xl active:scale-95">
+        <span class="block text-[9px] font-bold uppercase text-gray-400 leading-none">FRI</span>
+        <span class="block text-xs font-black mt-1 leading-none">11</span>
+      </button>
+      <button onclick="switchTab('day2')" id="tab-btn-day2" class="tab-btn py-2 text-center bg-white/70 backdrop-blur-md text-cocoa border border-white/90 shadow-2xs transition-all rounded-2xl active:scale-95">
+        <span class="block text-[9px] font-bold uppercase text-gray-400 leading-none">SAT</span>
+        <span class="block text-xs font-black mt-1 leading-none">12</span>
+      </button>
+      <button onclick="switchTab('day3')" id="tab-btn-day3" class="tab-btn py-2 text-center bg-white/70 backdrop-blur-md text-cocoa border border-white/90 shadow-2xs transition-all rounded-2xl active:scale-95">
+        <span class="block text-[9px] font-bold uppercase text-gray-400 leading-none">SUN</span>
+        <span class="block text-xs font-black mt-1 leading-none">13</span>
+      </button>
+      <button onclick="switchTab('day4')" id="tab-btn-day4" class="tab-btn py-2 text-center bg-white/70 backdrop-blur-md text-cocoa border border-white/90 shadow-2xs transition-all rounded-2xl active:scale-95">
+        <span class="block text-[9px] font-bold uppercase text-gray-400 leading-none">MON</span>
+        <span class="block text-xs font-black mt-1 leading-none">14</span>
+      </button>
+      <button onclick="switchTab('day5')" id="tab-btn-day5" class="tab-btn py-2 text-center bg-white/70 backdrop-blur-md text-cocoa border border-white/90 shadow-2xs transition-all rounded-2xl active:scale-95">
+        <span class="block text-[9px] font-bold uppercase text-gray-400 leading-none">TUE</span>
+        <span class="block text-xs font-black mt-1 leading-none">15</span>
+      </button>
+    </div>
+
+    <!-- 3. 動態目的地 24 小時每小時天氣看板 -->
+    <section class="glass-card p-3.5 mb-3 rounded-3xl relative overflow-hidden transition-all duration-300">
+      <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-white/60">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-pochacco-light/90 flex items-center justify-center p-0.5 border border-pochacco/40 shrink-0 shadow-2xs">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+              <path d="M28,45 C25,25 75,25 72,45 C86,52 86,75 70,82 C55,87 45,87 30,82 C14,75 14,52 28,45 Z" fill="#FFFFFF" stroke="#221E1F" stroke-width="4.5"/>
+              <path d="M26,38 C18,22 10,12 18,6 C26,1 36,15 33,32 Z" fill="#221E1F"/>
+              <path d="M70,36 C82,38 98,46 95,58 C91,66 74,54 68,46 Z" fill="#221E1F"/>
+              <path d="M42,20 C42,14 47,15 47,19 M50,18 C52,12 57,13 56,18 M58,21 C62,16 66,18 64,22" fill="none" stroke="#221E1F" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="38" cy="55" rx="3.5" ry="5.5" fill="#221E1F"/>
+              <ellipse cx="62" cy="55" rx="3.5" ry="5.5" fill="#221E1F"/>
+              <ellipse cx="50" cy="62" rx="4.5" ry="3.5" fill="#221E1F"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h2 class="text-xs font-black text-cocoa" id="dest-board-city">大阪・氣象</h2>
+              <span id="dest-board-badge" class="bg-white/80 text-gray-500 text-[8px] font-bold px-1.5 py-0.2 rounded-full border border-white/60">連動</span>
+            </div>
+            <p class="text-[10px] text-gray-500" id="dest-board-summary">讀取中...</p>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <div class="text-sm font-black text-cocoa leading-none" id="dest-current-temp">--°C</div>
+          <div class="text-[10px] text-pochacco-dark font-bold mt-0.5" id="dest-current-pop">💧 --%</div>
+        </div>
+      </div>
+
+      <!-- 橫向每小時滾動條 -->
+      <div id="hourly-forecast-container" class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+        <div class="shrink-0 w-12 p-1.5 bg-white/50 rounded-2xl text-center text-[10px] text-gray-400">載入中</div>
+      </div>
+    </section>
+
+    <!-- 4. 內容展示區 (雙欄毛玻璃時間軸) -->
+    <div id="content-container"></div>
+
+  </main>
+
+  <!-- 5. 通用多功能 Modal (景點故事重點 / 交通路線條例 / 多地點分項導航 / 放大置中日文點餐卡片) -->
+  <div id="dynamic-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-white/90 backdrop-blur-2xl max-w-sm w-full p-5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-white rounded-3xl modal-anim max-h-[85vh] overflow-y-auto">
+      
+      <!-- 頂部標題列 (置中) -->
+      <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-gray-150 relative">
+        <div class="w-full flex items-center justify-center gap-1.5 pr-4 pl-4">
+          <span id="dynamic-modal-icon" class="text-lg">📍</span>
+          <h3 id="dynamic-modal-title" class="font-black text-cocoa text-sm tracking-wide text-center">詳細資訊</h3>
+        </div>
+        <button onclick="closeDynamicModal()" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 hover:text-gray-900 flex items-center justify-center text-xs absolute right-0">✕</button>
+      </div>
+
+      <!-- 內容區塊 -->
+      <div id="dynamic-modal-body" class="space-y-3 text-xs text-cocoa-soft"></div>
+
+      <button onclick="closeDynamicModal()" class="w-full mt-4 bg-cocoa text-white py-2.5 rounded-2xl font-bold text-xs shadow-sm hover:bg-cocoa-dark transition active:scale-95">關閉視窗</button>
+    </div>
+  </div>
+
+  <!-- 6. 行前清單專屬 Modal (純裝備 Checklist) -->
+  <div id="prep-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-white/90 backdrop-blur-2xl max-w-sm w-full p-4.5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-white rounded-3xl max-h-[85vh] overflow-y-auto modal-anim">
+      <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-gray-150">
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">📋</span>
+          <h3 class="font-black text-cocoa text-xs">行前裝備清單</h3>
+        </div>
+        <button onclick="closePrepModal()" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 hover:text-gray-900 flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <div id="prep-modal-content" class="space-y-2.5"></div>
+
+      <button onclick="closePrepModal()" class="w-full mt-3.5 bg-cocoa text-white py-2.5 rounded-2xl font-bold text-xs shadow-sm hover:bg-cocoa-dark transition active:scale-95">完成</button>
+    </div>
+  </div>
+
+  <!-- JavaScript 核心程式碼 -->
+  <script>
+    // ==========================================
+    // 1. 定位與天氣狀態
+    // ==========================================
+    let userLocation = { lat: 34.6937, lon: 135.5023 };
+    let isUserLocated = false;
+
+    const CITY_COORDS = {
+      osaka: { name: '大阪', lat: 34.6937, lon: 135.5023 },
+      kyoto: { name: '京都', lat: 35.0116, lon: 135.7681 }
+    };
+
+    const weatherCache = {};
+
+    // 帕恰狗專屬向量頭像
+    const PochaccoHeadSvg = `
+      <svg viewBox="0 0 100 100" class="w-3.5 h-3.5 inline-block shrink-0 align-middle">
+        <path d="M28,45 C25,25 75,25 72,45 C86,52 86,75 70,82 C55,87 45,87 30,82 C14,75 14,52 28,45 Z" fill="#FFFFFF" stroke="#221E1F" stroke-width="4.5" stroke-linejoin="round"/>
+        <path d="M26,38 C18,22 10,12 18,6 C26,1 36,15 33,32 Z" fill="#221E1F"/>
+        <path d="M70,36 C82,38 98,46 95,58 C91,66 74,54 68,46 Z" fill="#221E1F"/>
+        <path d="M42,20 C42,14 47,15 47,19 M50,18 C52,12 57,13 56,18 M58,21 C62,16 66,18 64,22" fill="none" stroke="#221E1F" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="38" cy="55" rx="3.5" ry="5.5" fill="#221E1F"/>
+        <ellipse cx="62" cy="55" rx="3.5" ry="5.5" fill="#221E1F"/>
+        <ellipse cx="50" cy="62" rx="4.5" ry="3.5" fill="#221E1F"/>
+      </svg>
+    `;
+
+    // 結構化行程資料 JSON
+    const tripData = {
+      prep: {
+        categories: [
+          {
+            name: "重要行前準備",
+            icon: "fa-passport",
+            color: "yellow",
+            items: [
+              "護照 ((flex))",
+              "日幣現金",
+              "信用卡額度提高",
+              "各自購買旅遊保險 ($678)",
+              "KDDI eSIM 各自購買 5 天",
+              "線上 VJW 及機上紙本填寫",
+              "星宇 9/9 & 9/13 線上報到",
+              "悠遊卡 (搭機捷 $115/次)",
+              "SNOOPY 撲克牌 (機上問空姐)",
+              "暈機藥"
+            ]
+          },
+          {
+            name: "隨身背包必帶",
+            icon: "fa-bag-shopping",
+            color: "teal",
+            items: [
+              "小電風扇、防曬乳、雨傘、帽子",
+              "行動電源、豆腐頭、充電線",
+              "小購物袋、乾洗手、衛生紙、濕紙巾",
+              "隨身小垃圾袋、吸油面紙、衛生棉",
+              "小提袋 (裝水壺)、筆、口罩*6",
+              "隱眼、酒精、眼鏡盒",
+              "相機 (充電線 & 備用電池)",
+              "提神飲料、眼藥水"
+            ]
+          },
+          {
+            name: "行李箱托運清單",
+            icon: "fa-suitcase",
+            color: "blue",
+            items: [
+              "壓縮袋、面膜、感冒藥",
+              "盥洗用具 (洗面乳 & 護髮油)",
+              "外出衣服 *5+1、睡衣褲、襪子 *5+1",
+              "免洗內褲 *5+1 & 貼身衣物",
+              "化妝用具 (定妝噴霧/蜜粉/唇膏/眼影/腮紅/卸妝)",
+              "壓縮毛巾 *4、髒衣服塑膠袋",
+              "梳子、髮捲、鯊魚夾、外出型漱口水",
+              "洗臉帶、髮箍、起泡器、香水、首飾盒"
+            ]
+          },
+          {
+            name: "環球影城專屬裝備",
+            icon: "fa-wand-magic-sparkles",
+            color: "yellow",
+            items: [
+              "QR Code (門票 & 快速通關存手機)",
+              "100元日幣零錢 (置物櫃專用)",
+              "輕便雨衣、雨鞋套、雨傘",
+              "爆米花塑膠袋、裝娃娃大購物袋",
+              "防曬外套、帽子、小電風扇",
+              "暈機藥 (玩哈利波特前必吃！)",
+              "小零食、水"
+            ]
+          },
+          {
+            name: "⚠️ 重要叮嚀",
+            icon: "fa-triangle-exclamation",
+            color: "red",
+            items: [
+              "不要帶金屬/純金飾品",
+              "超過 100ml 液體一律放入托運行李"
+            ]
+          }
+        ]
+      },
+      day1: {
+        cityKey: 'osaka',
+        items: [
+          // 關西機場到飯店交通彈窗
+          {
+            time: "04:30\n起",
+            duration: "全程約 9.5 小時",
+            type: "transport",
+            name: "啟程前往大阪 (機捷 ➜ 星宇 ➜ 關西機場 ➜ 新今宮)",
+            isMultiModal: true,
+            modalData: {
+              icon: "🛬",
+              title: "關西機場 ➜ 飯店 交通指引",
+              type: "steps",
+              steps: [
+                { step: "1", title: "抵達與出關", desc: "4:30 起床出發 ➜ 5:40 新北產業園區機捷 ➜ 8:30 星宇起飛 ➜ 12:15 抵達關西機場第一航廈出關領行李。" },
+                { step: "2", title: "前往鐵道車站過空橋", desc: "上到 2 樓沿著指標【鉄道（Railways）】走過空橋（步行約 5-10 分鐘）抵達關西機場站。" },
+                { step: "3", title: "南海電鐵進站閘口", desc: "認明【橘色（Orange）】南海電鐵進站閘口。乘車券 ¥970，可直接嗶 Suica / 悠遊卡進站。" },
+                { step: "4", title: "班次選擇與說明", desc: "【特急 Rapi:t (α 34分 / β 38分)】每30分一班，全車指定席，車門有專用行李架。月台內補特急券 ¥700 (官網預購為 ¥500)。\n【空港急行 (約 47-48 分鐘)】全車自由座，電子看板顯示「空港急行 / Airport Exp.」。" },
+                { step: "5", title: "抵達新今宮與飯店", desc: "於【新今宮站】下車，轉乘一站至【今宮戎站】出站步行 3 分鐘即抵達 CHECK inn 大阪新今宮！" }
+              ]
+            },
+            notes: "機捷 ➜ 星宇 ➜ 關西機場 ➜ 南海電鐵(特急Rapi:t/空港急行) ➜ 新今宮 ➜ 今宮戎站。"
+          },
+          {
+            time: "14:00",
+            duration: "30分",
+            type: "hotel",
+            name: "CHECK inn 大阪新今宮 (辦理入住/放行李)",
+            locationQuery: "CHECK inn 大阪新今宮",
+            notes: "新今宮站 ➜ 今宮戎站下車 ➜ 步行3分鐘。現場須支付住宿稅 ¥1,600 ($327) (¥200×2人×4天)。⚠️ 限現金 💵。"
+          },
+          // LIFE 超市點餐/必買卡片彈窗
+          {
+            time: "14:50",
+            duration: "50分",
+            type: "food",
+            name: "LIFE 中央廣場 難波店 (伴手禮退稅採購)",
+            openHours: "09:00 - 00:00",
+            locationQuery: "LIFE 中央廣場 難波店",
+            isMultiModal: true,
+            modalData: {
+              icon: "🛒",
+              title: "LIFE 超市 必買清單",
+              type: "menuCards",
+              menuItems: [
+                { jp: "シャインマスカット / 白桃", cn: "日本麝香葡萄 / 水蜜桃" },
+                { jp: "カキフライ弁当", cn: "現炸廣島大牡蠣便當" },
+                { jp: "プレミアム特濃牛乳", cn: "LIFE 自營特濃牛奶" },
+                { jp: "日清 どん兵衛 きつねうどん", cn: "日清 兵衛大豆皮烏龍麵" }
+              ]
+            },
+            notes: "步行8分鐘 ➜ 大國町站 ➜ 難波站下車 ➜ 步行2分鐘。免稅櫃台 10:00-19:45。"
+          },
+          // 老爺爺起司蛋糕 日文指差點餐卡片彈窗 (放大置中)
+          {
+            time: "15:50",
+            duration: "30分",
+            type: "food",
+            name: "りくろーおじさんの店 なんば本店 (老爺爺蛋糕)",
+            openHours: "09:00 - 20:00",
+            isMultiModal: true,
+            modalData: {
+              icon: "🍰",
+              title: "りくろーおじさん 招牌甜點",
+              type: "menuCards",
+              menuItems: [
+                { jp: "焼きたてチーズケーキ (1ホール)", cn: "現烤起司蛋糕 (整顆 6號/直徑18cm)" },
+                { jp: "アップルパイ", cn: "現烤蘋果派 (酥脆千層外皮)" },
+                { jp: "とろ〜りプリン", cn: "濃郁滑順布丁" },
+                { jp: "薪パイ (まきパイ)", cn: "酥脆千層派條 (伴手禮首選)" },
+                { jp: "陸カフェ ROOM ケーキセット", cn: "2F 陸咖啡 現烤蛋糕套餐 (內用)" }
+              ]
+            },
+            notes: "招牌現烤起司蛋糕、蘋果派、濃郁布丁。"
+          },
+          {
+            time: "16:30",
+            duration: "40分",
+            type: "cosme",
+            name: "AENA Namba Walk 3 番街北通り店",
+            openHours: "10:00 - 21:00",
+            locationQuery: "AENA 難波Walk",
+            notes: "在 B26 樓梯旁。化妝品破盤特價購物，⚠️ 不能退稅。"
+          },
+          {
+            time: "17:20",
+            duration: "40分",
+            type: "spot",
+            name: "3COINS なんばウォーク虹のまち店",
+            openHours: "10:00 - 21:00",
+            locationQuery: "3COINS なんばウォーク虹のまち",
+            notes: "日系百圓質感生活雜貨。"
+          },
+          {
+            time: "18:10",
+            duration: "1.5小時",
+            type: "spot",
+            name: "Bic Camera 難波店",
+            openHours: "10:00 - 21:00",
+            locationQuery: "Bic Camera 難波店",
+            notes: "採購清單：1F 吹風機、5F 廚房家電、7F PS5 手把與玩具。每層樓皆可退稅，不可混退。"
+          },
+          {
+            time: "19:50",
+            duration: "45分",
+            type: "food",
+            name: "LIFE 中央廣場 難波店 (晚餐便當與隔日早餐採買)",
+            openHours: "09:00 - 00:00",
+            locationQuery: "LIFE 中央廣場 難波店",
+            notes: "購買美味熱食晚餐、日本水蜜桃/麝香葡萄、特濃牛乳及能量飲料。"
+          },
+          {
+            time: "20:45",
+            duration: "回飯店",
+            type: "hotel",
+            name: "返回 CHECK inn 大阪新今宮",
+            locationQuery: "CHECK inn 大阪新今宮",
+            notes: "步行3分鐘 ➜ 難波站搭御堂筋線 ➜ 大國町站下車 ➜ 步行7分鐘回飯店休息。"
+          }
+        ]
+      },
+      day2: {
+        cityKey: 'osaka',
+        items: [
+          {
+            time: "07:00",
+            duration: "2小時",
+            type: "cosme",
+            name: "Sugi Pharmacy Tsutenkaku (杉藥局 通天閣店)",
+            openHours: "09:00 - 00:00",
+            locationQuery: "杉藥局 通天閣",
+            notes: "5:30 起床梳洗準備。藥妝購物採買。"
+          },
+          {
+            time: "09:50",
+            duration: "約2小時",
+            type: "spot",
+            name: "通天閣 (TOWER SLIDER & Dive＆Walk)",
+            openHours: "09:30 - 20:00",
+            locationQuery: "通天閣",
+            notes: "10:00 報到。巨型透明滑梯與高空漫步體驗。"
+          },
+          // 午餐三選一
+          {
+            time: "12:00",
+            duration: "45分",
+            type: "food",
+            name: "通天閣午餐推薦 (人形燒 / 三吉烏龍麵 / 麥當勞)",
+            openHours: "依店家不同",
+            isMultiModal: true,
+            modalData: {
+              icon: "🍴",
+              title: "通天閣午餐推薦三選一",
+              type: "places",
+              places: [
+                { name: "人形燒 カステラ & 咖啡", time: "09:00 - 20:00", query: "通天閣 人形燒" },
+                { name: "三吉烏龍麵 (三吉うどん)", time: "09:00 - 14:00", query: "三吉うどん 大阪" },
+                { name: "McDonald’s 通天閣前店", time: "07:00 - 01:00", query: "マクドナルド 通天閣前店" }
+              ]
+            },
+            notes: "人形燒 (09:00-20:00)、三吉烏龍麵 (09:00-14:00)、麥當勞 (07:00-01:00)。"
+          },
+          {
+            time: "12:45",
+            duration: "1小時",
+            type: "spot",
+            name: "HISEKI 大阪心斎橋店 (手工戒指製作)",
+            openHours: "11:00 - 19:00",
+            locationQuery: "HISEKI 大阪心斎橋店",
+            notes: "【交通方式】：步行6分鐘 ➜ 惠美須町站〔搭乘 11:39 班次〕➜ 長堀橋站下車 ➜ 步行14分鐘抵達。\n【付款方式】：信用卡、現金、LinePay、交通卡。\n【款式選項】：8.0mm(¥1900)、21.0mm(¥2400)、23.0mm(¥2900)、另外加項鍊(+¥1200)。"
+          },
+          {
+            time: "14:00",
+            duration: "45分",
+            type: "spot",
+            name: "THANK YOU MART 大阪美國村店",
+            openHours: "11:00 - 20:00",
+            locationQuery: "THANK YOU MART 心斎橋ビッグステップ",
+            notes: "很多聯名小商品，結帳時直接出示護照。"
+          },
+          {
+            time: "14:55",
+            duration: "35分",
+            type: "cosme",
+            name: "Os Drug 心齋橋店",
+            openHours: "10:00 - 19:50",
+            locationQuery: "OS Drug 心齋橋",
+            notes: "只收現金，便宜的不退稅商品！"
+          },
+          // 心齋橋 PARCO & 大丸百貨
+          {
+            time: "15:40",
+            duration: "3小時",
+            type: "spot",
+            name: "心齋橋 PARCO & 大丸心齋橋店 本館",
+            openHours: "10:00 - 20:00",
+            isMultiModal: true,
+            modalData: {
+              icon: "🛍️",
+              title: "心齋橋兩大百貨樓層與退稅",
+              type: "places",
+              places: [
+                { name: "心齋橋 PARCO", time: "10:00 - 20:00", query: "心齋橋 PARCO" },
+                { name: "大丸心齋橋店 本館", time: "10:00 - 20:00", query: "大丸心齋橋店" }
+              ]
+            },
+            notes: "PARCO (扭蛋/無印/千層蛋糕) 與 大丸百貨 (Aíam香水/95折券退稅)。"
+          },
+          {
+            time: "19:00",
+            duration: "1.5小時",
+            type: "spot",
+            name: "GU、UNIQLO",
+            openHours: "11:00 - 21:00",
+            locationQuery: "GU 心齋橋",
+            notes: "• B1-2F是UNIQLO、3F-4F是GU\n• 自助退稅機 / 退稅分開\n• 營業時間 11:00-21:00"
+          },
+          // 焼肉ぽんが 點餐卡片彈窗
+          {
+            time: "21:15",
+            duration: "1.5小時",
+            type: "food",
+            name: "YAKINIKU PONGA SHINSAIBASHI (焼肉ぽんが)",
+            openHours: "17:00 - 03:00",
+            locationQuery: "焼肉ぽんが 心斎橋店",
+            isMultiModal: true,
+            modalData: {
+              icon: "🥩",
+              title: "焼肉ぽんが 必點燒肉",
+              type: "menuCards",
+              menuItems: [
+                { jp: "名物 たたみネギたん塩", cn: "元祖招牌蔥花疊鹽味牛舌" },
+                { jp: "厚切りタン塩", cn: "特選厚切牛舌" },
+                { jp: "特選サーロイン (卵・一口ライス付)", cn: "特選沙朗和牛 (附生蛋黃・一口飯)" },
+                { jp: "盛岡冷麺", cn: "盛岡冷麵" }
+              ]
+            },
+            notes: "⭐ 預約時間：21:15。專人幫忙烤黑毛和牛。"
+          },
+          {
+            time: "22:50",
+            duration: "回飯店",
+            type: "hotel",
+            name: "返回 CHECK inn 大阪新今宮",
+            locationQuery: "CHECK inn 大阪新今宮",
+            notes: "心齋橋站搭御堂筋線 ➜ 大國町站下車 ➜ 步行7分鐘回飯店休息。"
+          }
+        ]
+      },
+      day3: {
+        cityKey: 'kyoto',
+        items: [
+          // 飯店到清水寺交通整合彈窗
+          {
+            time: "03:00\n起",
+            duration: "出發約2小時",
+            type: "transport",
+            name: "出發前往京都清水寺 (交通轉乘指南)",
+            isMultiModal: true,
+            modalData: {
+              icon: "🚆",
+              title: "飯店 ➜ 清水寺 完整交通路線",
+              type: "steps",
+              steps: [
+                { step: "1", title: "出發至大國町站", desc: "03:00 起床梳洗 ➜ 04:50 旅館大門口出發 ➜ 步行 8 分鐘至【大國町站】。" },
+                { step: "2", title: "地鐵御堂筋線", desc: "【大國町站】搭乘 05:08 發車班次 (¥290，車程 20 分鐘) ➜ 抵達【新大阪站】下車。" },
+                { step: "3", title: "JR 東海道新幹線", desc: "於新大阪站自動售票機購買東海道新幹線自由座 (¥1,440，自由席 1~3 節車廂)。搭乘【希望號 Nozomi 230號 06:00 發車】(車程 13 分鐘) ➜ 06:13 抵達【京都站】。(進站兩張票疊一起投入，出站機器回收)" },
+                { step: "4", title: "京都站巴士轉乘", desc: "京都站前巴士總站搭乘【市營巴士 206 號】〔06:31 或 06:38 班次〕(¥230，車程 15 分鐘) ➜ 於【五條坂站】下車。" },
+                { step: "5", title: "步行抵達清水寺", desc: "五條坂站下車後步行 11 分鐘，預計 07:00 抵達【清水寺】！" }
+              ]
+            },
+            notes: "地鐵御堂筋線 ➜ 東海道新幹線 (Nozomi 230) ➜ 市營巴士 206 號 ➜ 五條坂。"
+          },
+          // ⭐ 清水寺 (歷史重點與特色摘要彈窗)
+          {
+            time: "07:00",
+            duration: "2.5小時",
+            type: "spot",
+            name: "清水寺 & 二年坂・三年坂",
+            openHours: "06:00 - 18:00",
+            locationQuery: "京都 清水寺", // 導航直接帶入清水寺
+            isMultiModal: true,
+            modalData: {
+              icon: "🏯",
+              title: "音羽山 清水寺 歷史特色摘要",
+              type: "spotDetail",
+              spot: {
+                name: "音羽山 清水寺 (Kiyomizu-dera)",
+                status: "世界文化遺產 (1994年登錄) · 日本國寶",
+                history: "始建於西元 778 年 (奈良時代末期) [13:34, 13:42]，相傳由僧侶「賢心 (延鎮上人)」追隨黃金清泉之夢來到音羽山，與征夷大將軍「坂上田村麻呂」共同創立 [13:34, 13:37, 2:07, 2:48]。供奉十一面千手觀音菩薩 [2:25, 3:02]，自古為京都庶民信仰中心 [13:39, 13:40]。",
+                highlights: [
+                  { label: "清水舞台 (懸造式建築)", text: "本堂大舞台高約 13 公尺 (四層樓高) [0:17, 8:01]，由 139 根巨大櫸木縱橫交錯支撐 [8:06, 8:08]，完全未使用任何一根鋼釘 (榫卯工藝) [8:10, 8:15]。日本有句諺語「從清水舞台跳下」形容破釜沉舟的決心 [8:23, 8:27]。" },
+                  { label: "音羽之瀑 (金色水/延命水)", text: "數千年來終年湧出清澈泉水 [15:40]，分流為三道靈水 [15:10]，自左至右分別代表「學業有成」、「戀愛順利」、「健康長壽」 [15:25, 15:28]。傳說只能選一道喝一口，願望才會靈驗！ [15:30, 15:35]" },
+                  { label: "仁王門 & 狛犬之謎", text: "朱紅色的「赤門」仁王門前 [4:04, 4:08]，兩尊狛犬不同於一般神社一開一閉 [3:42, 3:45]，清水寺的狛犬竟然「兩隻嘴巴都是張開的」 [3:51, 3:53]，成為京都著名的歷史奇趣之謎 [3:54, 3:56]。" },
+                  { label: "地主神社 (戀愛緣結)", text: "清水寺境內最古老的結緣神社 [10:02, 13:08]，供奉大國主命 [10:08, 10:09]。境內有一對相距 10 公尺的「戀愛占卜石」 [10:59, 11:02]，傳說閉著眼睛若能順利從一顆走到另一顆，戀情就能順利實現！ [11:04, 11:09]" }
+                ],
+                ticketInfo: "門票：大人 ¥500 / 中小學生 ¥200 (限現金 💵)。社務所 08:00-18:00。"
+              }
+            },
+            notes: "門票現場買 ¥500 ($103，限現金 💵)。社務所 8:00-18:00。清晨漫步清水舞台與二年坂石板路。"
+          },
+          // ⭐ Snoopy Chocolat 清水坂限定推薦
+          {
+            time: "09:30",
+            duration: "30分",
+            type: "spot",
+            name: "Snoopy Chocolat 京都清水坂店",
+            openHours: "09:30 - 17:30",
+            locationQuery: "Snoopy Chocolat 京都清水坂店",
+            isMultiModal: true,
+            modalData: {
+              icon: "🍫",
+              title: "SNOOPY Chocolat 清水坂限定推薦",
+              type: "menuCards",
+              menuItems: [
+                { jp: "タブレットショコラ 清水坂限定", cn: "清水坂限定 漫畫板狀巧克力 (附紙本漫畫)" },
+                { jp: "クランチチョコレート (黄粉 / 抹茶)", cn: "鐵盒脆片巧克力 (清水坂限定黃豆粉/抹茶)" },
+                { jp: "ショコラジェラート (抹茶 / チョコミント)", cn: "義式冰淇淋 (插史努比巧克力片 / 現場享用)" },
+                { jp: "BonBon ショコラ (白味噌 / 抹茶)", cn: "清水坂限定白味噌 / 抹茶生巧克力夾心" },
+                { jp: "スヌーピー ぬいぐるみ (清水坂限定)", cn: "清水坂限定色 史努比布偶娃娃 / 提袋" }
+              ]
+            },
+            notes: "清水坂限定漫畫巧克力、黃豆粉脆片鐵盒、白味噌巧克力、現吃冰淇淋與限定娃娃。"
+          },
+          // ⭐ 京ばあむ 清水店 & 藤菜美 三年坂本店 (區分店家 + 美食卡片 + 獨立導航)
+          {
+            time: "10:00",
+            duration: "1小時",
+            type: "food",
+            name: "京ばあむ 清水店 & 藤菜美 三年坂本店",
+            openHours: "10:00 - 17:00",
+            isMultiModal: true,
+            modalData: {
+              icon: "🍡",
+              title: "清水坂人氣點心伴手禮",
+              type: "storeGroupedMenu",
+              stores: [
+                {
+                  name: "京ばあむ 清水店",
+                  time: "10:00 - 17:00",
+                  query: "京ばあむ 清水店",
+                  items: [
+                    { jp: "京ばあむ (バームクーヘン)", cn: "宇治抹茶豆乳年輪蛋糕 (京都必買伴手禮)" },
+                    { jp: "京ばあむサブレ", cn: "抹茶豆乳年輪脆餅 (小巧伴手禮)" }
+                  ]
+                },
+                {
+                  name: "藤菜美 三年坂本店",
+                  time: "10:00 - 17:00",
+                  query: "藤菜美 三年坂本店",
+                  items: [
+                    { jp: "みたらし団子 (きな粉つき)", cn: "現烤醬油糰子 (附特濃黃豆粉)" },
+                    { jp: "わらび餅 (抹茶・きなこ・黒糖)", cn: "手工蕨餅 (Q彈三色和菓子)" },
+                    { jp: "洛水 (抹茶ドリンク)", cn: "洛水 宇治抹茶無糖冰飲" }
+                  ]
+                }
+              ]
+            },
+            notes: "京ばあむ (抹茶年輪) 與 藤菜美 (糰子甜點)。"
+          },
+          {
+            time: "11:15",
+            duration: "30分",
+            type: "spot",
+            name: "My Only Fragrance KIYOMIZU (香水製作)",
+            openHours: "10:30 - 19:00",
+            locationQuery: "My Only Fragrance 清水",
+            notes: "⭐ 預約時段 11:15-11:45 (製作約30分鐘)。親自調配專屬香水。"
+          },
+          // ⭐ 八坂神社 (歷史重點與特色摘要彈窗)
+          {
+            time: "11:50",
+            duration: "20分",
+            type: "spot",
+            name: "八坂神社 (祇園總本社)",
+            openHours: "境內全天開放",
+            locationQuery: "八坂神社 京都",
+            isMultiModal: true,
+            modalData: {
+              icon: "⛩️",
+              title: "八坂神社 (祇園社) 歷史特色摘要",
+              type: "spotDetail",
+              spot: {
+                name: "八坂神社 (Yasaka Shrine)",
+                status: "日本三大祭「祇園祭」總本社 · 本殿指定為國寶",
+                history: "相傳創立於西元 656 年 (齊明天皇時代)，是全日本約 3,000 座八坂神社及祇園社的總本社，在地親切暱稱「祇園桑 (祇園さん)」。明治前為神佛融合的「祇園感神院」，主祭消災除厄之神「素戔嗚尊」、其妻「櫛名田姬命」及八柱御子神。",
+                highlights: [
+                  { label: "千年祇園祭 (日本三大祭)", text: "起源於西元 869 年，當時京都疫病流行，為祈求除疫消災而立 66 根矛舉辦「御靈會」。每年 7 月展開為期一個月的盛大祭典，以華麗絢爛的「山鉾巡行」被譽為移動的美術館。" },
+                  { label: "國寶本殿「祇園造」", text: "本殿建於 1654 年，建築形式極具特色，將神殿與拜殿合為一體，覆蓋在一座巨大的屋頂之下，為日本神道建築中的珍貴瑰寶。" },
+                  { label: "美御前社 (美容水)", text: "境內末社供奉宗像三女神，殿前湧出清澈的「美容水」，相傳滴 2-3 滴在臉上不僅能美化肌膚，還能淨化心靈，受到京都藝妓與女性信眾熱烈朝聖！" },
+                  { label: "西樓門 (四條通起點)", text: "面向熱鬧四條通的鮮豔朱紅大門，相傳即使下雨也不會留下水痕，且從不結蜘蛛網，為八坂神社傳奇的七大不可思議之一。" }
+                ],
+                ticketInfo: "參拜費用：免費入境。社務所御守受理時間：09:00 - 17:00。"
+              }
+            },
+            notes: "漫步祇園參拜。消災除厄、美御前社美容水、國寶祇園造本殿。"
+          },
+          // 清水寺到伏見稻荷大社交通整合彈窗
+          {
+            time: "12:09",
+            duration: "27分",
+            type: "transport",
+            name: "前往伏見稻荷大社 (交通轉乘指南)",
+            isMultiModal: true,
+            modalData: {
+              icon: "⛩️",
+              title: "清水寺 ➜ 伏見稻荷大社 交通路線",
+              type: "steps",
+              steps: [
+                { step: "1", title: "搭乘市營巴士", desc: "於【清水道站】〔12:09 上車〕搭乘【市營巴士 206 號】(¥230，車程 8 分鐘) ➜ 於【七条京阪前站】下車。" },
+                { step: "2", title: "步行轉乘京阪本線", desc: "下車後步行 3 分鐘至京阪電車【七條站】。" },
+                { step: "3", title: "京阪本線搭乘", desc: "【七條站】搭乘京阪本線 (¥180，車程 5 分鐘) ➜ 於【東福寺站】下車。" },
+                { step: "4", title: "轉乘 JR 奈良線", desc: "站內轉乘【JR 奈良線】(¥150，車程 2 分鐘) ➜ 於【稻荷站】下車。" },
+                { step: "5", title: "抵達伏見稻荷", desc: "稻荷站出站步行 1 分鐘，預計 12:36 抵達【伏見稻荷大社】！" }
+              ]
+            },
+            notes: "市營巴士 206 號 ➜ 京阪本線 (七條) ➜ JR 奈良線 (東福寺/稻荷)。"
+          },
+          // ⭐ 伏見稻荷大社 (歷史重點與特色摘要彈窗)
+          {
+            time: "12:40",
+            duration: "3小時",
+            type: "spot",
+            name: "伏見稻荷大社 & 周邊排隊名店",
+            openHours: "境內全天開放",
+            isMultiModal: true,
+            modalData: {
+              icon: "🦊",
+              title: "伏見稻荷大社 歷史特色摘要",
+              type: "spotDetail",
+              spot: {
+                name: "伏見稻荷大社 (Fushimi Inari Taisha)",
+                status: "全日本約三萬座稻荷神社總本社 · 式內名神大社",
+                history: "創建於西元 711 年 (和銅4年)，由古代渡來人望族「秦氏」之首領伊呂具奉天皇命令於稻荷山三峰祭祀稻荷大神。自古庇佑五穀豐登、商賣繁盛、家內安全與產業興隆，為近畿地區初詣參拜人數最多之神社。",
+                highlights: [
+                  { label: "千本鳥居 (朱紅信仰隧道)", text: "江戶時代起信眾為祈求「心願實現」與「還願感謝」所捐贈豎立，如今整座稻荷山上豎立超過萬座朱紅鳥居，形成震撼的長廊通道 (電影《藝妓回憶錄》經典場景)。" },
+                  { label: "稻荷大神使者「白狐」", text: "神社隨處可見狐狸雕像取代傳統狛犬。狐狸會捕食田間害鼠守護稻穗，嘴裡多叼著象徵豐收的「稻穗」、開啟糧倉的「鑰匙」、象徵靈德的「寶珠」或「卷軸」。" },
+                  { label: "奧社奉拜所「輕重石 (おもかる石)」", text: "千本鳥居終點處的奧社有一對石燈籠。在心中許下願望後舉起燈籠頂部的空輪石，若感覺重量比預想輕，願望便能迅速實現；若感覺沉重則需更加努力！" },
+                  { label: "白狐造型繪馬", text: "獨特的倒三角形狐狸臉繪馬，參拜者可自由在上面畫出各種生動有趣的狐狸表情並寫下心願祈福。" }
+                ],
+                ticketInfo: "參拜費用：免費入境。授與所 (御守/神籤)：08:30 - 16:30。"
+              }
+            },
+            notes: "千本鳥居、白狐繪馬、輕重石。周邊名店：まるもち家、いなり煎餅、高畠商店(狐狸娃娃)。"
+          },
+          {
+            time: "16:15",
+            duration: "1小時",
+            type: "transport",
+            name: "回程：京都 ➜ 新大阪 ➜ 難波",
+            notes: "步行1分 ➜ 稻荷站搭奈良線(¥150/5分) ➜ 京都站轉 JR 新幹線自由座(¥1440/13分) ➜ 新大阪站 ➜ 轉御堂筋線至難波站下車步行6分。"
+          },
+          // NEXT shikaku
+          {
+            time: "17:30",
+            duration: "1.5小時",
+            type: "food",
+            name: "NEXT shikaku (牡蠣沾麵晚餐)",
+            openHours: "10:30 - 22:30",
+            locationQuery: "NEXT shikaku 難波",
+            isMultiModal: true,
+            modalData: {
+              icon: "🦪",
+              title: "NEXT shikaku 指差點餐卡",
+              type: "menuCards",
+              menuItems: [
+                { jp: "牡蠣つけ「asobu」 (おすすめ！)", cn: "招牌牡蠣沾麵 asobu" },
+                { jp: "牡蠣白湯「koeru」", cn: "牡蠣白湯拉麵 koeru" },
+                { jp: "肉寿司 (2貫)", cn: "炙燒和牛肉壽司 (2貫)" },
+                { jp: "シン・カキメシ", cn: "極上牡蠣炊飯" }
+              ]
+            },
+            notes: "必吃牡蠣濃湯沾麵。⚠️ 自助機不收現金 (限刷卡/LinePay/交通卡)。"
+          },
+          {
+            time: "19:15",
+            duration: "2小時",
+            type: "cosme",
+            name: "唐吉訶德 難波千日前店",
+            openHours: "09:00 - 04:00",
+            locationQuery: "唐吉訶德 難波千日前店",
+            notes: "營業至深夜。退稅櫃檯在 3 樓（醫藥品專區旁邊）。"
+          },
+          {
+            time: "21:30",
+            duration: "回飯店",
+            type: "hotel",
+            name: "返回 CHECK inn 大阪新今宮",
+            locationQuery: "CHECK inn 大阪新今宮",
+            notes: "返回飯店休息。"
+          }
+        ]
+      },
+      day4: {
+        cityKey: 'osaka',
+        items: [
+          // 飯店到環球影城交通整合彈窗
+          {
+            time: "03:30\n起",
+            duration: "出發約2小時",
+            type: "transport",
+            name: "前往日本環球影城 (交通路線指南)",
+            isMultiModal: true,
+            modalData: {
+              icon: "🎢",
+              title: "飯店 ➜ 日本環球影城 交通路線",
+              type: "steps",
+              steps: [
+                { step: "1", title: "出發至新今宮站", desc: "03:30 起床梳洗準備 ➜ 04:40 旅館大門口出發 ➜ 步行 10 分鐘至【新今宮站】。" },
+                { step: "2", title: "JR 大阪環狀線", desc: "【新今宮站】搭乘〔04:54 發車班次〕(¥200，車程 8 分鐘) ➜ 抵達【西九條站】。" },
+                { step: "3", title: "轉乘 JR 夢咲線", desc: "於西九條站轉乘【JR 夢咲線 (櫻島行)】(車程 6 分鐘) ➜ 抵達【環球城站 (Universal City)】。" },
+                { step: "4", title: "側門排隊安檢", desc: "預計 05:24 抵達環球城站！出站步行至旁邊側門進入排隊等待安檢進園。" }
+              ]
+            },
+            notes: "新今宮(04:54) ➜ 西九條 ➜ 環球城(05:24) 側門排隊安檢。"
+          },
+          {
+            time: "05:24",
+            duration: "整天",
+            type: "spot",
+            name: "日本環球影城 (USJ)",
+            openHours: "08:30 - 21:30",
+            locationQuery: "Universal Studios Japan",
+            notes: "※ 從旁邊側門進入排隊安檢！進園先抽任天堂瑪利歐整理券。玩哈利波特前吃暈機藥。"
+          },
+          // 環球影城到難波/飯店交通整合彈窗
+          {
+            time: "19:45",
+            duration: "35分",
+            type: "transport",
+            name: "環球影城 ➜ 難波居酒屋晚餐 (回程交通指南)",
+            isMultiModal: true,
+            modalData: {
+              icon: "🚆",
+              title: "環球影城 ➜ 難波/飯店 回程路線",
+              type: "steps",
+              steps: [
+                { step: "1", title: "環球城站搭車", desc: "19:45 離開園區步行至【環球城站】，搭乘 JR 夢咲線 (車程 6 分鐘) ➜ 抵達【西九條站】。" },
+                { step: "2", title: "轉乘大阪環狀線", desc: "於西九條站轉乘【JR 大阪環狀線】〔08:06 班次〕(¥200，車程 8 分鐘) ➜ 抵達【新今宮站】或前往難波站。" },
+                { step: "3", title: "前往串燒晚餐", desc: "前往難波千日前【Enya 炭火燒鳥】享用居酒屋晚餐宵夜！" }
+              ]
+            },
+            notes: "環球城 ➜ 西九條(08:06) ➜ 大阪環狀線 ➜ 難波串燒居酒屋。"
+          },
+          // Enya 炭火燒鳥
+          {
+            time: "20:30",
+            duration: "1.5小時",
+            type: "food",
+            name: "Enya 炭火燒鳥 難波千日前店 (晚餐宵夜)",
+            openHours: "14:00 - 00:00",
+            locationQuery: "炭火焼とり えんや 難波千日前店",
+            isMultiModal: true,
+            modalData: {
+              icon: "🍢",
+              title: "えんや 炭火燒鳥 必點推薦",
+              type: "menuCards",
+              menuItems: [
+                { jp: "月見なんこつつくね", cn: "招牌軟骨雞肉丸 (附生蛋黃)" },
+                { jp: "ねぎま (塩 / タレ)", cn: "鹽烤 / 醬烤 雞腿蔥串" },
+                { jp: "とり皮 (パリパリ)", cn: "酥脆雞皮串" },
+                { jp: "手羽先 (塩焼き)", cn: "炭烤雞翅 (鹽味)" }
+              ]
+            },
+            notes: "美味炭火串燒居酒屋，必吃招牌雞肉丸、烤雞腿蔥串。"
+          },
+          {
+            time: "22:15",
+            duration: "回飯店",
+            type: "hotel",
+            name: "返回 CHECK inn 大阪新今宮",
+            locationQuery: "CHECK inn 大阪新今宮",
+            notes: "返回飯店休息。"
+          }
+        ]
+      },
+      day5: {
+        cityKey: 'osaka',
+        items: [
+          // 飯店到難波八阪神社交通整合
+          {
+            time: "08:45",
+            duration: "15分",
+            type: "transport",
+            name: "前往難波八阪神社 (交通指南)",
+            isMultiModal: true,
+            modalData: {
+              icon: "⛩️",
+              title: "飯店 ➜ 難波八阪神社 路線",
+              type: "steps",
+              steps: [
+                { step: "1", title: "出發至今宮戎站", desc: "08:45 飯店退房/寄放行李 ➜ 步行 3 分鐘至【今宮戎站】。" },
+                { step: "2", title: "搭乘南海高野線", desc: "【今宮戎站】搭乘〔09:21 班次〕➜ 抵達【南海難波站】下車。" },
+                { step: "3", title: "步行抵達八阪神社", desc: "南海難波站出站後步行 8 分鐘，09:00 抵達【難波八阪神社】！" }
+              ]
+            },
+            notes: "今宮戎(09:21) ➜ 南海難波站 ➜ 步行8分鐘抵達。"
+          },
+          // ⭐ 難波八阪神社 (歷史重點與特色摘要彈窗)
+          {
+            time: "09:00",
+            duration: "1小時",
+            type: "spot",
+            name: "難波八阪神社 (獅子殿)",
+            openHours: "06:30 - 17:00",
+            locationQuery: "難波八阪神社",
+            isMultiModal: true,
+            modalData: {
+              icon: "🦁",
+              title: "難波八阪神社 歷史特色摘要",
+              type: "spotDetail",
+              spot: {
+                name: "難波八阪神社 (Namba Yasaka Shrine)",
+                status: "大阪市第一個無形民俗文化財 · 難波產土神",
+                history: "起源悠久 (相傳始於仁德天皇時期)，自古作為難波地區的守護神「難波下之宮 (難波下の宮)」備受尊崇。平安時期因平息瘟疫而供奉牛頭天王，明治維新後神佛分離，改為主祭斬殺八岐大蛇的神話英雄「素盞嗚尊」及妻神「奇稻田姬命」。",
+                highlights: [
+                  { label: "12 公尺巨型獅子殿 (吞噬厄運)", text: "神社最具標誌性的象徵！獅子殿高 12 公尺、寬 11 公尺、深 10 公尺，巨大的獅子張開血盆大口，象徵將所有的邪氣厄運吸入吞噬，為參拜者招來勝運與好運！" },
+                  { label: "祈求勝運與求職合格", text: "由於獅子大口吞厄招福的強大神德，吸引全日本無數考生、求職者與運動選手前來祈求考試合格、就業順利與商業繁盛！" },
+                  { label: "精緻御神籤 (戀愛鯉魚/鯛魚/不倒翁)", text: "神社內有多款造型獨特的開運神籤，包含祈求愛情的「戀愛鯉魚籤」、祈求平安的「鯛魚籤」以及健康合格的「不倒翁籤」，非常值得收藏！" }
+                ],
+                ticketInfo: "參拜費用：免費入境。社務所授與時間：09:00 - 17:00。"
+              }
+            },
+            notes: "巨大獅子殿參拜祈福！吸走厄運招來幸運、特色鯛魚/鯉魚神籤。"
+          },
+          // 難波八阪神社到關西機場返台交通整合彈窗
+          {
+            time: "10:15",
+            duration: "全程約 7 小時",
+            type: "transport",
+            name: "難波八阪神社 ➜ 關西機場返台 (交通與班次指南)",
+            isMultiModal: true,
+            modalData: {
+              icon: "✈️",
+              title: "難波八阪神社 ➜ 關西機場 完整路線",
+              type: "steps",
+              steps: [
+                { step: "1", title: "前往南海難波站", desc: "09:45 參拜完畢返回飯店取行李，步行至【南海難波站 第 9 月台】（南海 9 番ホーム）。" },
+                { step: "2", title: "南海電鐵班次選擇", desc: "【選擇 ① 特急 Rapi:t β】10:35 發車 ➜ 11:15 抵達關西機場 (40分)。全車指定席，乘車券 ¥970 (Suica進站) + 特急券 ¥700 (車門有專用行李架)。\n\n【選擇 ② 空港急行】10:38 發車 ➜ 11:22 抵達關西機場 (48分)。全車自由座，乘車券 ¥970 (Suica進站)，電子看板顯示「空港急行 / Airport Exp.」。" },
+                { step: "3", title: "星宇航空報到", desc: "11:30 抵達關西機場第一航廈，前往【4 樓 E 櫃檯】辦理星宇航空登機與行李托運。" },
+                { step: "4", title: "返抵桃園機場", desc: "15:10 星宇起飛 ➜ 17:05 抵達桃園國際機場第一航廈，平安返家！" }
+              ]
+            },
+            notes: "難波八阪神社 ➜ 南海第9月台 ➜ 特急Rapi:t/空港急行 ➜ 關西機場一航星宇報到。"
+          }
+        ]
+      }
+    };
+
+    // ==========================================
+    // 2. Open-Meteo 天氣 API
+    // ==========================================
+    function decodeWmo(code) {
+      if (code === 0) return { icon: '☀️', text: '晴朗' };
+      if ([1, 2].includes(code)) return { icon: '⛅', text: '多雲' };
+      if (code === 3) return { icon: '☁️', text: '陰天' };
+      if ([45, 48].includes(code)) return { icon: '🌫️', text: '有霧' };
+      if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return { icon: '🌧️', text: '短暫雨' };
+      if ([71, 73, 75, 85, 86].includes(code)) return { icon: '❄️', text: '降雪' };
+      if ([95, 96, 99].includes(code)) return { icon: '⛈️', text: '雷雨' };
+      return { icon: '🌤️', text: '晴時多雲' };
+    }
+
+    async function loadLocalWeather(lat, lon, label) {
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=precipitation_probability&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const temp = Math.round(data.current.temperature_2m);
+        const code = data.current.weather_code;
+        const precipProb = data.hourly?.precipitation_probability ? data.hourly.precipitation_probability[0] : 0;
+        const info = decodeWmo(code);
+        
+        document.getElementById('local-weather-text').innerHTML = `
+          <span>${info.icon} ${temp}°C</span>
+          <span class="text-[9px] opacity-80">💧${precipProb}%</span>
+        `;
+      } catch (e) {
+        document.getElementById('local-weather-text').innerText = '26°C ⛅';
+      }
+    }
+
+    async function updateDestinationHourlyWeather(cityKey) {
+      const city = CITY_COORDS[cityKey] || CITY_COORDS.osaka;
+      
+      document.getElementById('dest-board-city').innerText = `${city.name}・氣象`;
+      document.getElementById('dest-board-badge').innerText = cityKey === 'kyoto' ? '京都' : '大阪';
+      
+      if (weatherCache[cityKey]) {
+        renderHourlyBoard(weatherCache[cityKey]);
+        return;
+      }
+
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,apparent_temperature,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&timezone=Asia%2FTokyo&forecast_days=2`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const hourlyList = [];
+        const times = data.hourly.time;
+        const temps = data.hourly.temperature_2m;
+        const pops = data.hourly.precipitation_probability;
+        const codes = data.hourly.weather_code;
+
+        const currentIso = data.current.time;
+        let startIndex = times.findIndex(t => t >= currentIso);
+        if (startIndex === -1) startIndex = 0;
+
+        for (let i = startIndex; i < startIndex + 20 && i < times.length; i++) {
+          const hourStr = times[i].substring(11, 16);
+          hourlyList.push({
+            time: i === startIndex ? '現在' : hourStr,
+            temp: Math.round(temps[i]),
+            pop: pops[i] ?? 0,
+            code: codes[i]
+          });
+        }
+
+        const payload = {
+          currentTemp: Math.round(data.current.temperature_2m),
+          apparentTemp: Math.round(data.current.apparent_temperature),
+          currentCode: data.current.weather_code,
+          currentPop: pops[startIndex] ?? 0,
+          hourlyList: hourlyList
+        };
+
+        weatherCache[cityKey] = payload;
+        renderHourlyBoard(payload);
+
+      } catch (e) {
+        document.getElementById('dest-board-summary').innerText = '顯示預設天氣';
+      }
+    }
+
+    function renderHourlyBoard(wData) {
+      const currentInfo = decodeWmo(wData.currentCode);
+      document.getElementById('dest-current-temp').innerText = `${wData.currentTemp}°C`;
+      document.getElementById('dest-current-pop').innerText = `💧 ${wData.currentPop}%`;
+      document.getElementById('dest-board-summary').innerText = `${currentInfo.icon} ${currentInfo.text} · 體感 ${wData.apparentTemp}°C`;
+
+      const container = document.getElementById('hourly-forecast-container');
+      let html = '';
+
+      wData.hourlyList.forEach((h, index) => {
+        const info = decodeWmo(h.code);
+        const isCurrent = index === 0;
+
+        html += `
+          <div class="shrink-0 w-[50px] p-2 flex flex-col items-center justify-between border ${
+            isCurrent 
+              ? 'bg-pudding-light border-yellow-300/80 font-bold text-cocoa shadow-2xs' 
+              : 'bg-white/60 border-white/90 text-cocoa'
+          } rounded-2xl">
+            <span class="text-[9px] ${isCurrent ? 'font-black' : 'text-gray-400'}">${h.time}</span>
+            <span class="text-sm my-0.5">${info.icon}</span>
+            <span class="text-[10px] font-black">${h.temp}°</span>
+            <span class="text-[8px] text-pochacco-dark font-medium">💧${h.pop}%</span>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    async function initGeolocationAndWeather() {
+      try {
+        const ipRes = await fetch('https://ipapi.co/json/');
+        if (ipRes.ok) {
+          const ipData = await ipRes.json();
+          if (ipData.latitude && ipData.longitude) {
+            userLocation = {
+              lat: ipData.latitude,
+              lon: ipData.longitude,
+              city: ipData.city || '目前'
+            };
+            isUserLocated = true;
+          }
+        }
+      } catch (e) {}
+
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            userLocation.lat = pos.coords.latitude;
+            userLocation.lon = pos.coords.longitude;
+            isUserLocated = true;
+            loadLocalWeather(userLocation.lat, userLocation.lon, '所在處');
+          },
+          () => {
+            loadLocalWeather(userLocation.lat, userLocation.lon, userLocation.city || '目前');
+          },
+          { timeout: 4000 }
+        );
+      } else {
+        loadLocalWeather(userLocation.lat, userLocation.lon, userLocation.city || '目前');
+      }
+
+      updateDestinationHourlyWeather('osaka');
+    }
+
+    function getMapNavUrl(destinationQuery) {
+      const destEncoded = encodeURIComponent(destinationQuery);
+      if (isUserLocated && userLocation.lat && userLocation.lon) {
+        return `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lon}&destination=${destEncoded}&travelmode=transit`;
+      }
+      return `https://www.google.com/maps/search/?api=1&query=${destEncoded}`;
+    }
+
+    // ==========================================
+    // 3. Tab 切換與雙欄時間軸渲染
+    // ==========================================
+    function switchTab(tabKey) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('bg-white/70', 'text-cocoa');
+      });
+      const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+      if (activeBtn) {
+        activeBtn.classList.add('tab-active');
+        activeBtn.classList.remove('bg-white/70', 'text-cocoa');
+      }
+
+      const curData = tripData[tabKey];
+      const currentCityKey = curData?.cityKey || 'osaka';
+      updateDestinationHourlyWeather(currentCityKey);
+
+      const container = document.getElementById('content-container');
+      container.innerHTML = '';
+      renderDayTimelineTab(container, tripData[tabKey]);
+    }
+
+    // 渲染每日行程
+    function renderDayTimelineTab(container, dayData) {
+      let html = `
+        <div class="relative pl-1.5 space-y-3">
+          <div class="absolute top-3 bottom-3 left-[52px] w-0.5 bg-gray-200/60 -z-0"></div>
+      `;
+
+      dayData.items.forEach((item, index) => {
+        let badgeBg = 'bg-pudding/50 text-cocoa border border-yellow-300/40';
+        let badgeText = '景點';
+        let nodeColor = 'bg-pudding-dark border-white';
+
+        if (item.type === 'food') {
+          badgeBg = 'bg-orange-100/70 text-orange-800 border border-orange-200/50';
+          badgeText = '美食';
+          nodeColor = 'bg-orange-400 border-white';
+        } else if (item.type === 'cosme') {
+          badgeBg = 'bg-pink-100/70 text-pink-700 border border-pink-200/50';
+          badgeText = '藥妝/購物';
+          nodeColor = 'bg-pink-400 border-white';
+        } else if (item.type === 'transport' || item.type === 'hotel') {
+          badgeBg = item.type === 'hotel' ? 'bg-amber-100/70 text-amber-800 border border-amber-200/50' : 'bg-teal-100/70 text-teal-800 border border-teal-200/50';
+          badgeText = item.type === 'hotel' ? '住宿' : '交通';
+          nodeColor = 'bg-pochacco-dark border-white';
+        }
+
+        const mapUrl = item.locationQuery ? getMapNavUrl(item.locationQuery) : null;
+        const isClickable = item.isMultiModal;
+        const cardClickAttr = isClickable ? `onclick="openDynamicModal('${dayData.cityKey}', ${index})" style="cursor: pointer;"` : '';
+
+        html += `
+          <div class="relative flex items-start gap-2.5 z-10">
+            
+            <!-- 左欄：預估抵達時間 -->
+            <div class="w-[44px] shrink-0 text-right pt-2.5">
+              <span class="text-[10.5px] font-black text-cocoa leading-tight block whitespace-pre-line tracking-tight">${item.time || '彈性'}</span>
+            </div>
+
+            <!-- 時間軸節點圓潤小點 -->
+            <div class="shrink-0 w-3.5 h-3.5 rounded-full border-2 ${nodeColor} shadow-2xs mt-3 bg-white"></div>
+
+            <!-- 右欄：行程卡片 (毛玻璃圓角、柔和陰影) -->
+            <div ${cardClickAttr} class="flex-1 glass-card p-3.5 rounded-3xl transition hover:shadow-md active:scale-[0.99]">
+              
+              <!-- 頂部：標籤 + 營業時間 + 停留時間 + 導航 -->
+              <div class="flex items-start justify-between gap-1.5">
+                <div class="flex-1">
+                  <div class="flex items-center gap-1 mb-1.5 flex-wrap">
+                    <span class="text-[8.5px] font-black px-2 py-0.5 rounded-full ${badgeBg}">${badgeText}</span>
+                    
+                    <!-- 營業時間標籤 -->
+                    ${item.openHours ? `
+                      <span class="text-[8.5px] font-medium px-2 py-0.5 rounded-full bg-white/70 text-cocoa-soft border border-white">
+                        ⏰ ${item.openHours}
+                      </span>
+                    ` : ''}
+
+                    <!-- 停留時間標籤 -->
+                    ${item.duration ? `
+                      <span class="text-[8.5px] font-medium px-2 py-0.5 rounded-full bg-white/70 text-gray-500 border border-white">
+                        ⏱ ${item.duration}
+                      </span>
+                    ` : ''}
+                  </div>
+                  
+                  <h3 class="font-black text-cocoa text-xs leading-snug flex items-center gap-1">
+                    <span>${item.name}</span>
+                    ${isClickable ? '<i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-teal-600"></i>' : ''}
+                  </h3>
+                </div>
+
+                <!-- 微型圓形導航按鈕 (若為非彈窗單一景點) -->
+                ${mapUrl && !isClickable ? `
+                  <a href="${mapUrl}" target="_blank" title="開啟導航" class="shrink-0 w-7 h-7 rounded-full bg-blue-50/80 hover:bg-blue-100 border border-blue-200/60 flex items-center justify-center text-blue-600 shadow-2xs transition active:scale-90">
+                    <i class="fa-solid fa-location-arrow text-[10px]"></i>
+                  </a>
+                ` : ''}
+              </div>
+
+              <!-- 下方：備註文字 -->
+              ${item.notes ? `
+                <div class="mt-2 text-[11px] text-cocoa-soft leading-relaxed bg-white/50 p-2.5 rounded-2xl border border-white/60 whitespace-pre-line">
+                  ${item.notes}
+                </div>
+              ` : ''}
+
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // 4. 通用 Modal 控制
+    // ==========================================
+    function openDynamicModal(cityKey, itemIndex) {
+      let activeTabKey = 'day1';
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.classList.contains('tab-active')) {
+          activeTabKey = btn.id.replace('tab-btn-', '');
+        }
+      });
+
+      const item = tripData[activeTabKey]?.items[itemIndex];
+      if (!item || !item.modalData) return;
+
+      const m = item.modalData;
+      document.getElementById('dynamic-modal-icon').innerText = m.icon || '📍';
+      document.getElementById('dynamic-modal-title').innerText = m.title || '詳細資訊';
+
+      let bodyHtml = '';
+
+      // ⭐ A. 景點歷史故事與特色亮點摘要 (清水寺 / 伏見稻荷 / 八坂神社 / 難波八阪神社)
+      if (m.type === 'spotDetail' && m.spot) {
+        const s = m.spot;
+        bodyHtml += `
+          <div class="space-y-3">
+            <!-- 景點頂部卡 -->
+            <div class="p-3 bg-pudding-light/80 rounded-2xl border border-yellow-200/80 text-center">
+              <h4 class="font-black text-cocoa text-sm">${s.name}</h4>
+              <span class="inline-block text-[10px] font-bold text-amber-900 bg-white/90 px-2.5 py-0.5 rounded-full border border-yellow-200 mt-1">${s.status}</span>
+              <p class="text-[11px] text-gray-700 leading-relaxed mt-2 text-left">${s.history}</p>
+            </div>
+
+            <!-- 重點看點清單 -->
+            <div class="space-y-2">
+              <div class="text-[11px] font-black text-cocoa flex items-center gap-1">
+                <span>✨</span> 核心必看特色與傳奇
+              </div>
+        `;
+        s.highlights.forEach(h => {
+          bodyHtml += `
+            <div class="p-2.5 bg-white/90 rounded-2xl border border-gray-150 shadow-2xs">
+              <div class="font-bold text-cocoa text-xs mb-0.5 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-pochacco-dark"></span>
+                <span>${h.label}</span>
+              </div>
+              <p class="text-[11px] text-gray-600 leading-relaxed pl-3">${h.text}</p>
+            </div>
+          `;
+        });
+        bodyHtml += `
+            </div>
+            ${s.ticketInfo ? `
+              <div class="p-2.5 bg-gray-50/80 rounded-xl border border-gray-150 text-[10.5px] text-cocoa-soft leading-snug">
+                📌 <b>參拜實用資訊：</b>${s.ticketInfo}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+      // B. 條例式交通轉乘步驟
+      else if (m.type === 'steps') {
+        bodyHtml += `<div class="space-y-2">`;
+        m.steps.forEach(s => {
+          bodyHtml += `
+            <div class="p-3 bg-white/80 rounded-2xl border border-gray-150 shadow-2xs">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-5 h-5 rounded-full bg-teal-100 text-teal-900 font-black text-[10px] flex items-center justify-center shrink-0">${s.step}</span>
+                <h4 class="font-bold text-cocoa text-xs">${s.title}</h4>
+              </div>
+              <p class="text-[11px] text-gray-600 leading-relaxed pl-7 whitespace-pre-line">${s.desc}</p>
+            </div>
+          `;
+        });
+        bodyHtml += `</div>`;
+      }
+      // C. 多地點分項條列與獨立導航
+      else if (m.type === 'places') {
+        bodyHtml += `<div class="space-y-2">`;
+        m.places.forEach(p => {
+          const navUrl = getMapNavUrl(p.query || p.name);
+          bodyHtml += `
+            <div class="p-3 bg-white/80 rounded-2xl border border-gray-150 shadow-2xs">
+              <div class="flex items-start justify-between gap-1.5">
+                <div class="flex-1">
+                  <h4 class="font-bold text-cocoa text-xs">${p.name}</h4>
+                  ${p.time ? `<p class="text-[10px] text-cocoa-soft mt-0.5">⏰ 營業時間：${p.time}</p>` : ''}
+                </div>
+                <a href="${navUrl}" target="_blank" class="shrink-0 w-7 h-7 rounded-full bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shadow-xs hover:bg-blue-100 transition active:scale-95" title="導航前往">
+                  <i class="fa-solid fa-location-arrow text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+          `;
+        });
+        bodyHtml += `</div>`;
+      }
+      // D. 日文指差點餐卡片 (純大字放大置中，無備註)
+      else if (m.type === 'menuCards') {
+        bodyHtml += `<div class="space-y-2.5">`;
+        m.menuItems.forEach((menu) => {
+          bodyHtml += `
+            <div class="py-3.5 px-4 bg-white/95 rounded-2xl border border-yellow-200/90 shadow-2xs flex flex-col items-center justify-center text-center">
+              <div class="text-base font-black text-cocoa tracking-wide leading-snug text-center">
+                ${menu.jp}
+              </div>
+              <div class="text-xs font-bold text-amber-900 bg-yellow-50/90 px-3 py-0.5 rounded-full border border-yellow-200/70 mt-1.5 text-center">
+                ${menu.cn}
+              </div>
+            </div>
+          `;
+        });
+        bodyHtml += `</div>`;
+      }
+      // E. 店家分組＋美食卡片 (京ばあむ & 藤菜美)
+      else if (m.type === 'storeGroupedMenu') {
+        bodyHtml += `<div class="space-y-4">`;
+        m.stores.forEach(st => {
+          const navUrl = getMapNavUrl(st.query || st.name);
+          bodyHtml += `
+            <div class="p-3.5 bg-white/80 rounded-2xl border border-gray-150 shadow-2xs space-y-2">
+              <div class="flex items-start justify-between pb-2 border-b border-gray-100">
+                <div>
+                  <h4 class="font-black text-cocoa text-xs">${st.name}</h4>
+                  <p class="text-[10px] text-cocoa-soft mt-0.5">⏰ 營業時間：${st.time}</p>
+                </div>
+                <a href="${navUrl}" target="_blank" class="shrink-0 w-7 h-7 rounded-full bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shadow-xs hover:bg-blue-100 transition active:scale-95" title="導航前往">
+                  <i class="fa-solid fa-location-arrow text-[10px]"></i>
+                </a>
+              </div>
+              <div class="space-y-2 pt-1">
+          `;
+          st.items.forEach(it => {
+            bodyHtml += `
+              <div class="py-2.5 px-3 bg-yellow-50/40 rounded-xl border border-yellow-200/70 flex flex-col items-center justify-center text-center">
+                <div class="text-sm font-black text-cocoa tracking-wide text-center">${it.jp}</div>
+                <div class="text-[11px] font-bold text-amber-900 bg-white px-2.5 py-0.5 rounded-full border border-yellow-200 mt-1 text-center">${it.cn}</div>
+              </div>
+            `;
+          });
+          bodyHtml += `</div></div>`;
+        });
+        bodyHtml += `</div>`;
+      }
+
+      document.getElementById('dynamic-modal-body').innerHTML = bodyHtml;
+      document.getElementById('dynamic-modal').classList.remove('hidden');
+    }
+
+    function closeDynamicModal() {
+      document.getElementById('dynamic-modal').classList.add('hidden');
+    }
+
+    // 渲染清單 Modal (純 Checklist)
+    function renderPrepModalContent() {
+      const data = tripData.prep;
+      let html = '';
+
+      data.categories.forEach(cat => {
+        let borderColor = 'border-white/80';
+        let iconBg = 'bg-pudding text-cocoa';
+
+        if (cat.color === 'teal') {
+          borderColor = 'border-pochacco/40';
+          iconBg = 'bg-pochacco text-teal-900';
+        } else if (cat.color === 'blue') {
+          borderColor = 'border-blue-200/50';
+          iconBg = 'bg-blue-100 text-blue-900';
+        } else if (cat.color === 'red') {
+          borderColor = 'border-red-200/50';
+          iconBg = 'bg-red-100 text-red-800';
+        }
+
+        html += `
+          <div class="bg-white/70 backdrop-blur-md p-3 rounded-2xl border ${borderColor} shadow-2xs">
+            <div class="flex items-center gap-1.5 mb-2">
+              <div class="w-5 h-5 rounded-full ${iconBg} flex items-center justify-center text-[10px] shadow-2xs">
+                <i class="fa-solid ${cat.icon}"></i>
+              </div>
+              <h3 class="font-bold text-xs text-cocoa flex items-center gap-1">
+                <span>${cat.name}</span>
+                ${PochaccoHeadSvg}
+              </h3>
+            </div>
+            <div class="grid grid-cols-1 gap-1">
+        `;
+
+        cat.items.forEach((item) => {
+          html += `
+            <label class="flex items-start gap-2 p-1.5 rounded-xl hover:bg-white/60 text-xs text-cocoa/90 cursor-pointer transition">
+              <input type="checkbox" class="mt-0.5 w-3.5 h-3.5 rounded text-cocoa focus:ring-pudding border-gray-300">
+              <span class="leading-snug">${item}</span>
+            </label>
+          `;
+        });
+
+        html += `</div></div>`;
+      });
+
+      document.getElementById('prep-modal-content').innerHTML = html;
+    }
+
+    function openPrepModal() {
+      renderPrepModalContent();
+      document.getElementById('prep-modal').classList.remove('hidden');
+    }
+
+    function closePrepModal() {
+      document.getElementById('prep-modal').classList.add('hidden');
+    }
+
+    window.addEventListener('click', (e) => {
+      const dynamicModal = document.getElementById('dynamic-modal');
+      const prepModal = document.getElementById('prep-modal');
+      if (e.target === dynamicModal) closeDynamicModal();
+      if (e.target === prepModal) closePrepModal();
+    });
+
+    // 初始化執行 (預設 Day 1)
+    document.addEventListener('DOMContentLoaded', () => {
+      switchTab('day1');
+      initGeolocationAndWeather();
+    });
+  </script>
+</body>
+</html>
