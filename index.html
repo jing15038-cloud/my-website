@@ -218,7 +218,7 @@
     </div>
   </div>
 
-  <!-- 6. 行前清單專屬 Modal (純裝備 Checklist) -->
+  <!-- 6. 行前清單專屬 Modal (純裝備 Checklist，具備獨立保存功能) -->
   <div id="prep-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-white/90 backdrop-blur-2xl max-w-sm w-full p-4.5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-white rounded-3xl max-h-[85vh] overflow-y-auto modal-anim">
       <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-gray-150">
@@ -226,7 +226,11 @@
           <span class="text-base">📋</span>
           <h3 class="font-black text-cocoa text-xs">行前裝備清單</h3>
         </div>
-        <button onclick="closePrepModal()" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 hover:text-gray-900 flex items-center justify-center text-xs">✕</button>
+        <div class="flex items-center gap-2">
+          <!-- 一鍵重設按鈕 -->
+          <button onclick="resetPrepChecklist()" class="text-[10px] text-gray-400 hover:text-red-500 transition px-2 py-0.5 rounded-full border border-gray-200">重設</button>
+          <button onclick="closePrepModal()" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 hover:text-gray-900 flex items-center justify-center text-xs">✕</button>
+        </div>
       </div>
 
       <div id="prep-modal-content" class="space-y-2.5"></div>
@@ -697,7 +701,7 @@
                   query: "藤菜美 三年坂本店",
                   items: [
                     { jp: "みたらし団子 (きな粉つき)", cn: "現烤醬油糰子 (附特濃黃豆粉)" },
-                    { jp: "わらび餅 (抹茶・きなこ・黒糖)", cn: "手工蕨餅 (Q彈三色和菓子)" },
+                    { jp: "わらび餅 (抹茶・きなこ・黑糖)", cn: "手工蕨餅 (Q彈三色和菓子)" },
                     { jp: "洛水 (抹茶ドリンク)", cn: "洛水 宇治抹茶無糖冰飲" }
                   ]
                 }
@@ -764,7 +768,7 @@
             },
             notes: "市營巴士 206 號 ➜ 京阪本線 (七條) ➜ JR 奈良線 (東福寺/稻荷)。"
           },
-          // ⭐ 1. 伏見稻荷大社 (獨立景點卡片，保持不變)
+          // 1. 伏見稻荷大社 (獨立卡片)
           {
             time: "12:40",
             duration: "1.5小時",
@@ -792,7 +796,7 @@
             },
             notes: "千本鳥居、白狐繪馬、輕重石。全日三萬座稻荷神社總本社。"
           },
-          // ⭐ 2. 伏見稻荷周邊美食與名店推薦 (獨立分組卡片＋大字美食彈窗，含稲彦珈琲)
+          // 2. 伏見稻荷周邊美食 (獨立分組卡片)
           {
             time: "14:10",
             duration: "1.5小時",
@@ -1447,9 +1451,9 @@
         });
         bodyHtml += `</div>`;
       }
-      // ⭐ E. 店家分組＋美食卡片 (清水坂伴手禮 & 伏見稻荷名店)
+      // E. 店家分組＋美食卡片 (清水坂伴手禮 & 伏見稻荷名店)
       else if (m.type === 'storeGroupedMenu') {
-        bodyHtml += `<div class="space-y-3.5">`;
+        bodyHtml += `<div class="space-y-4">`;
         m.stores.forEach(st => {
           const navUrl = getMapNavUrl(st.query || st.name);
           bodyHtml += `
@@ -1486,12 +1490,54 @@
       document.getElementById('dynamic-modal').classList.add('hidden');
     }
 
-    // 渲染清單 Modal
+    // ⭐ 清單功能：本機獨立儲存 (LocalStorage) + 即時更新
+    const PREP_STORAGE_KEY = 'osaka_kyoto_prep_v1';
+
+    function getSavedPrepState() {
+      try {
+        const saved = localStorage.getItem(PREP_STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function togglePrepItem(itemId, isChecked) {
+      const state = getSavedPrepState();
+      state[itemId] = isChecked;
+      try {
+        localStorage.setItem(PREP_STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+
+      // 即時切換刪除線與文字顏色樣式
+      const textElem = document.getElementById(`prep-text-${itemId}`);
+      if (textElem) {
+        if (isChecked) {
+          textElem.classList.add('line-through', 'text-gray-400');
+          textElem.classList.remove('text-cocoa/90');
+        } else {
+          textElem.classList.remove('line-through', 'text-gray-400');
+          textElem.classList.add('text-cocoa/90');
+        }
+      }
+    }
+
+    function resetPrepChecklist() {
+      if (confirm('確定要清空並重設清單的勾選狀態嗎？')) {
+        try {
+          localStorage.removeItem(PREP_STORAGE_KEY);
+        } catch (e) {}
+        renderPrepModalContent();
+      }
+    }
+
+    // 渲染清單 Modal (純 Checklist，保留各自獨立儲存)
     function renderPrepModalContent() {
       const data = tripData.prep;
+      const state = getSavedPrepState();
       let html = '';
 
-      data.categories.forEach(cat => {
+      data.categories.forEach((cat, catIdx) => {
         let borderColor = 'border-white/80';
         let iconBg = 'bg-pudding text-cocoa';
 
@@ -1520,11 +1566,20 @@
             <div class="grid grid-cols-1 gap-1">
         `;
 
-        cat.items.forEach((item) => {
+        cat.items.forEach((item, itemIdx) => {
+          const itemId = `c${catIdx}_i${itemIdx}`;
+          const isChecked = !!state[itemId];
+
           html += `
-            <label class="flex items-start gap-2 p-1.5 rounded-xl hover:bg-white/60 text-xs text-cocoa/90 cursor-pointer transition">
-              <input type="checkbox" class="mt-0.5 w-3.5 h-3.5 rounded text-cocoa focus:ring-pudding border-gray-300">
-              <span class="leading-snug">${item}</span>
+            <label class="flex items-start gap-2 p-1.5 rounded-xl hover:bg-white/60 text-xs cursor-pointer transition">
+              <input type="checkbox" 
+                     id="prep-chk-${itemId}" 
+                     class="mt-0.5 w-3.5 h-3.5 rounded text-cocoa focus:ring-pudding border-gray-300 transition" 
+                     ${isChecked ? 'checked' : ''} 
+                     onchange="togglePrepItem('${itemId}', this.checked)">
+              <span id="prep-text-${itemId}" class="leading-snug transition-all ${isChecked ? 'line-through text-gray-400' : 'text-cocoa/90'}">
+                ${item}
+              </span>
             </label>
           `;
         });
