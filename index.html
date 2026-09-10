@@ -195,7 +195,7 @@
 
   </main>
 
-  <!-- 5. 通用多功能 Modal (景點故事重點 / 交通路線條例 / 多地點分項導航 / 放大置中日文點餐卡片) -->
+  <!-- 5. 通用多功能 Modal (景點故事重點 / 交通路線條例 / 多店家點餐卡片導航) -->
   <div id="dynamic-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-white/90 backdrop-blur-2xl max-w-sm w-full p-5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-white rounded-3xl modal-anim max-h-[85vh] overflow-y-auto">
       
@@ -259,7 +259,7 @@
       </svg>
     `;
 
-    // 結構化行程資料 JSON (每個行程皆明確配置 locationQuery 以確保 100% 呈現導航圖示)
+    // 結構化行程資料 JSON
     const tripData = {
       prep: {
         categories: [
@@ -338,12 +338,12 @@
       day1: {
         cityKey: 'osaka',
         items: [
-          // 關西機場到飯店交通彈窗 (配備導航)
+          // 關西機場到飯店交通彈窗
           {
             time: "04:30\n起",
             duration: "全程約 9.5 小時",
             type: "transport",
-            name: "啟程前往大阪 (桃園機場 ➜ 關西機場 ➜ 新今宮)",
+            name: "大阪GO (桃園機場 ➜ 關西機場 ➜ 新今宮)",
             locationQuery: "關西國際機場",
             isMultiModal: true,
             modalData: {
@@ -358,22 +358,22 @@
                 { step: "5", title: "抵達新今宮與飯店", desc: "於【新今宮站】下車，轉乘一站至【今宮戎站】出站步行 3 分鐘即抵達 CHECK inn 大阪新今宮！" }
               ]
             },
-            notes: "機捷 ➜ 星宇 ➜ 關西機場 ➜ 南海電鐵(特急Rapi:t/空港急行) ➜ 新今宮 ➜ 今宮戎站。"
+            notes: "記得錄轉場畫面。"
           },
           {
             time: "14:00",
             duration: "30分",
             type: "hotel",
-            name: "CHECK inn 大阪新今宮 (辦理入住/放行李)",
+            name: "CHECK inn 大阪新今宮",
             locationQuery: "CHECK inn 大阪新今宮",
             notes: "新今宮站 ➜ 今宮戎站下車 ➜ 步行3分鐘。現場須支付住宿稅 ¥1,600 ($327) (¥200×2人×4天)。⚠️ 限現金 💵。"
           },
-          // LIFE 超市點餐/必買卡片彈窗 (配備導航)
+          // LIFE 超市
           {
             time: "14:50",
             duration: "50分",
             type: "food",
-            name: "LIFE 中央廣場 難波店",
+            name: "LIFE 中央廣場 難波店 ",
             openHours: "09:00 - 00:00",
             locationQuery: "LIFE 中央廣場 難波店",
             isMultiModal: true,
@@ -390,7 +390,7 @@
             },
             notes: "步行8分鐘 ➜ 大國町站 ➜ 難波站下車 ➜ 步行2分鐘。免稅櫃台 10:00-19:45。"
           },
-          // 老爺爺起司蛋糕 日文指差點餐卡片彈窗 (配備導航)
+          // 老爺爺起司蛋糕
           {
             time: "15:50",
             duration: "30分",
@@ -411,7 +411,7 @@
                 { jp: "陸カフェ ROOM ケーキセット", cn: "2F 陸咖啡 現烤蛋糕套餐 (內用)" }
               ]
             },
-            notes: "招牌現烤起司蛋糕、蘋果派、濃郁布丁。"
+            notes: "蛋糕很大，可能會變成接下來4天的早餐。"
           },
           {
             time: "16:30",
@@ -429,7 +429,7 @@
             name: "3COINS なんばウォーク虹のまち店",
             openHours: "10:00 - 21:00",
             locationQuery: "3COINS なんばウォーク虹のまち",
-            notes: "日系百圓質感生活雜貨。"
+            notes: "退稅要用JP-refund"
           },
           {
             time: "18:10",
@@ -438,7 +438,7 @@
             name: "Bic Camera 難波店",
             openHours: "10:00 - 21:00",
             locationQuery: "Bic Camera 難波店",
-            notes: "採購清單：1F 吹風機、5F 廚房家電、7F PS5 手把與玩具。每層樓皆可退稅，不可混退。"
+            notes: "採購清單：1F 吹風機、、3F相機/藥妝/零食、5F 保溫瓶/行李箱、7F PS5 手把與玩具。每層樓皆可退稅，不可混退。"
           },
           {
             time: "19:50",
@@ -480,12 +480,12 @@
             locationQuery: "通天閣",
             notes: "10:00 報到。巨型透明滑梯與高空漫步體驗。"
           },
-          // 午餐三選一 (配備導航)
+          // 午餐三選一
           {
             time: "12:00",
             duration: "45分",
             type: "food",
-            name: "通天閣午餐推薦 (人形燒 / 三吉烏龍麵 / 麥當勞)",
+            name: "人形燒 / 三吉烏龍麵 / 麥當勞",
             openHours: "依店家不同",
             locationQuery: "通天閣",
             isMultiModal: true,
@@ -528,7 +528,7 @@
             locationQuery: "OS Drug 心齋橋",
             notes: "只收現金，便宜的不退稅商品！"
           },
-          // 心齋橋 PARCO & 大丸百貨 (配備導航)
+          // 心齋橋 PARCO & 大丸百貨
           {
             time: "15:40",
             duration: "3小時",
@@ -557,7 +557,7 @@
             locationQuery: "GU 心齋橋",
             notes: "• B1-2F是UNIQLO、3F-4F是GU\n• 自助退稅機 / 退稅分開\n• 營業時間 11:00-21:00"
           },
-          // 焼肉ぽんが (配備導航)
+          // 焼肉ぽんが
           {
             time: "21:15",
             duration: "1.5小時",
@@ -592,7 +592,7 @@
       day3: {
         cityKey: 'kyoto',
         items: [
-          // 飯店到清水寺交通整合彈窗 (配備導航)
+          // 飯店到清水寺交通整合彈窗
           {
             time: "03:00\n起",
             duration: "出發約2小時",
@@ -614,7 +614,7 @@
             },
             notes: "地鐵御堂筋線 ➜ 東海道新幹線 (Nozomi 230) ➜ 市營巴士 206 號 ➜ 五條坂。"
           },
-          // 清水寺 (配備導航直接帶入清水寺)
+          // 清水寺
           {
             time: "07:00",
             duration: "2.5小時",
@@ -642,7 +642,7 @@
             },
             notes: "門票現場買 ¥500 ($103，限現金 💵)。社務所 8:00-18:00。清晨漫步清水舞台與二年坂石板路。"
           },
-          // Snoopy Chocolat (配備導航)
+          // Snoopy Chocolat
           {
             time: "09:30",
             duration: "30分",
@@ -665,7 +665,7 @@
             },
             notes: "清水坂限定漫畫巧克力、黃豆粉脆片鐵盒、白味噌巧克力、現吃冰淇淋與限定娃娃。"
           },
-          // 京ばあむ & 藤菜美 (配備導航)
+          // 京ばあむ & 藤菜美
           {
             time: "10:00",
             duration: "1小時",
@@ -711,7 +711,7 @@
             locationQuery: "My Only Fragrance 清水",
             notes: "⭐ 預約時段 11:15-11:45 (製作約30分鐘)。親自調配專屬香水。"
           },
-          // 八坂神社 (配備導航)
+          // 八坂神社
           {
             time: "11:50",
             duration: "20分",
@@ -739,7 +739,7 @@
             },
             notes: "漫步祇園參拜。消災除厄、美御前社美容水、國寶祇園造本殿。"
           },
-          // 清水寺到伏見稻荷大社交通整合彈窗 (配備導航)
+          // 清水寺到伏見稻荷大社交通整合彈窗
           {
             time: "12:09",
             duration: "27分",
@@ -761,13 +761,13 @@
             },
             notes: "市營巴士 206 號 ➜ 京阪本線 (七條) ➜ JR 奈良線 (東福寺/稻荷)。"
           },
-          // 伏見稻荷大社 (配備導航)
+          // ⭐ 1. 伏見稻荷大社 (獨立景點卡片，保持不變)
           {
             time: "12:40",
-            duration: "3小時",
+            duration: "1.5小時",
             type: "spot",
-            name: "伏見稻荷大社 & 周邊排隊名店",
-            openHours: "境內全天開放",
+            name: "伏見稻荷大社 (千本鳥居)",
+            openHours: "境內全天開放 (授與所 08:30-16:30)",
             locationQuery: "伏見稻荷大社",
             isMultiModal: true,
             modalData: {
@@ -787,7 +787,70 @@
                 ticketInfo: "參拜費用：免費入境。授與所 (御守/神籤)：08:30 - 16:30。"
               }
             },
-            notes: "千本鳥居、白狐繪馬、輕重石。周邊名店：まるもち家、いなり煎餅、高畠商店(狐狸娃娃)。"
+            notes: "千本鳥居、白狐繪馬、輕重石。全日三萬座稻荷神社總本社。"
+          },
+          // ⭐ 2. 伏見稻荷周邊美食與名店推薦 (獨立分組卡片＋大字美食彈窗，含稲彦珈琲)
+          {
+            time: "14:10",
+            duration: "1.5小時",
+            type: "food",
+            name: "稲彦珈琲/まるもち家/煎餅/高畠/末吉",
+            openHours: "依店家不同 (07:30 - 19:00)",
+            locationQuery: "伏見稻荷 參道",
+            isMultiModal: true,
+            modalData: {
+              icon: "🍡",
+              title: "伏見稻荷 周邊美食與名店推薦",
+              type: "storeGroupedMenu",
+              stores: [
+                {
+                  name: "稲彦珈琲 伏見稲荷本店 (inahiko coffee)",
+                  time: "09:00 - 18:00",
+                  query: "稲彦珈琲 伏見稲荷本店",
+                  items: [
+                    { jp: "稲彦ブレンド ドリップコーヒー", cn: "稻彥特調 手沖濾滴咖啡 (自家烘焙)" },
+                    { jp: "抹茶ラテ (アイス / ホット)", cn: "宇治抹茶拿鐵 (濃郁香醇)" }
+                  ]
+                },
+                {
+                  name: "まるもち家 伏見稲荷本店",
+                  time: "08:00 - 19:00",
+                  query: "まるもち家 伏見稲荷本店",
+                  items: [
+                    { jp: "水まるもち (天然水わらび餅)", cn: "水信玄餅 (附黑蜜・黃豆粉/招牌人氣)" },
+                    { jp: "まるもち (みたらし・粒あん)", cn: "現烤圓糰子 (醬油/紅豆粒餡)" }
+                  ]
+                },
+                {
+                  name: "総本家 宝玉堂 (いなり煎餅発祥の店)",
+                  time: "07:30 - 17:00",
+                  query: "総本家 宝玉堂 伏見",
+                  items: [
+                    { jp: "小きつね煎餅 (3枚入〜)", cn: "小狐狸立體造型煎餅 (白味噌・白芝麻香)" },
+                    { jp: "鈴せんべい (おみくじ入り)", cn: "鈴鐺煎餅 (內藏籤詩)" }
+                  ]
+                },
+                {
+                  name: "おみやげ (株)高畠商店 (狐狸娃娃老店)",
+                  time: "10:00 - 17:00",
+                  query: "高畠商店 伏見",
+                  items: [
+                    { jp: "きつねぬいぐるみ (伏見稲荷限定)", cn: "伏見稻荷限定 狐狸柔軟布偶娃娃" },
+                    { jp: "狐のお面 (民芸品)", cn: "伏見稻荷傳統 狐狸彩繪面具" }
+                  ]
+                },
+                {
+                  name: "末吉餅 -Sueyoshimochi- (大社御用達老舖)",
+                  time: "08:00 - 17:00",
+                  query: "末吉餅 伏見",
+                  items: [
+                    { jp: "オリジナル トートバッグ (キャンバス)", cn: "末吉餅原創 伏見狐狸帆布提袋" },
+                    { jp: "名物 紅白三色小餅", cn: "稻荷大社御用 紅白手工麻糬年糕" }
+                  ]
+                }
+              ]
+            },
+            notes: "稲彦珈琲、まるもち家(水信玄餅)、総本家宝玉堂(狐狸煎餅)、高畠商店(狐狸娃娃)、末吉餅(帆布袋)。"
           },
           {
             time: "16:15",
@@ -797,7 +860,7 @@
             locationQuery: "京都站",
             notes: "步行1分 ➜ 稻荷站搭奈良線(¥150/5分) ➜ 京都站轉 JR 新幹線自由座(¥1440/13分) ➜ 新大阪站 ➜ 轉御堂筋線至難波站下車步行6分。"
           },
-          // NEXT shikaku (配備導航)
+          // NEXT shikaku
           {
             time: "17:30",
             duration: "1.5小時",
@@ -841,7 +904,7 @@
       day4: {
         cityKey: 'osaka',
         items: [
-          // 飯店到環球影城交通整合彈窗 (配備導航)
+          // 飯店到環球影城交通整合彈窗
           {
             time: "03:30\n起",
             duration: "出發約2小時",
@@ -871,7 +934,7 @@
             locationQuery: "Universal Studios Japan",
             notes: "※ 從旁邊側門進入排隊安檢！進園先抽任天堂瑪利歐整理券。玩哈利波特前吃暈機藥。"
           },
-          // 環球影城到難波/飯店交通整合彈窗 (配備導航)
+          // 環球影城到難波/飯店交通整合彈窗
           {
             time: "19:45",
             duration: "35分",
@@ -891,7 +954,7 @@
             },
             notes: "環球城 ➜ 西九條(08:06) ➜ 大阪環狀線 ➜ 難波串燒居酒屋。"
           },
-          // Enya 炭火燒鳥 (配備導航)
+          // Enya 炭火燒鳥
           {
             time: "20:30",
             duration: "1.5小時",
@@ -926,7 +989,7 @@
       day5: {
         cityKey: 'osaka',
         items: [
-          // 飯店到難波八阪神社交通整合 (配備導航)
+          // 飯店到難波八阪神社交通整合
           {
             time: "08:45",
             duration: "15分",
@@ -946,7 +1009,7 @@
             },
             notes: "今宮戎(09:21) ➜ 南海難波站 ➜ 步行8分鐘抵達。"
           },
-          // 難波八阪神社 (配備導航)
+          // 難波八阪神社
           {
             time: "09:00",
             duration: "1小時",
@@ -973,7 +1036,7 @@
             },
             notes: "巨大獅子殿參拜祈福！吸走厄運招來幸運、特色鯛魚/鯉魚神籤。"
           },
-          // 難波八阪神社到關西機場返台交通整合彈窗 (配備導航)
+          // 難波八阪神社到關西機場返台交通整合彈窗
           {
             time: "10:15",
             duration: "全程約 7 小時",
@@ -1147,7 +1210,7 @@
       updateDestinationHourlyWeather('osaka');
     }
 
-    // ⭐ 導航 URL (僅帶入目的地，不自動帶起點)
+    // 導航 URL (僅帶入目的地)
     function getMapNavUrl(destinationQuery) {
       const destEncoded = encodeURIComponent(destinationQuery);
       return `https://www.google.com/maps/search/?api=1&query=${destEncoded}`;
@@ -1176,7 +1239,7 @@
       renderDayTimelineTab(container, tripData[tabKey]);
     }
 
-    // 渲染每日行程 (所有行程皆帶有導航圖標)
+    // 渲染每日行程
     function renderDayTimelineTab(container, dayData) {
       let html = `
         <div class="relative pl-1.5 space-y-3">
@@ -1202,7 +1265,6 @@
           nodeColor = 'bg-pochacco-dark border-white';
         }
 
-        // 確保每個項目都有有效的導航目標字串
         const navQuery = item.locationQuery || item.name;
         const mapUrl = getMapNavUrl(navQuery);
         const isClickable = item.isMultiModal;
@@ -1219,7 +1281,7 @@
             <!-- 時間軸節點圓潤小點 -->
             <div class="shrink-0 w-3.5 h-3.5 rounded-full border-2 ${nodeColor} shadow-2xs mt-3 bg-white"></div>
 
-            <!-- 右欄：行程卡片 (毛玻璃圓角、柔和陰影) -->
+            <!-- 右欄：行程卡片 -->
             <div ${cardClickAttr} class="flex-1 glass-card p-3.5 rounded-3xl transition hover:shadow-md active:scale-[0.99]">
               
               <!-- 頂部：標籤 + 營業時間 + 停留時間 + 導航圖示 -->
@@ -1249,7 +1311,7 @@
                   </h3>
                 </div>
 
-                <!-- ⭐ 所有行程一律配置微型圓形導航按鈕 (點擊直接開 Google Maps 目的地) -->
+                <!-- 微型圓形導航按鈕 -->
                 <a href="${mapUrl}" target="_blank" onclick="event.stopPropagation();" title="導航前往 ${navQuery}" class="shrink-0 w-7 h-7 rounded-full bg-blue-50/80 hover:bg-blue-100 border border-blue-200/60 flex items-center justify-center text-blue-600 shadow-2xs transition active:scale-90">
                   <i class="fa-solid fa-location-arrow text-[10px]"></i>
                 </a>
@@ -1272,7 +1334,7 @@
     }
 
     // ==========================================
-    // 4. 通用 Modal 控制 (景點重點 / 交通步驟 / 多地點導航 / 點餐卡片)
+    // 4. 通用 Modal 控制
     // ==========================================
     function openDynamicModal(cityKey, itemIndex) {
       let activeTabKey = 'day1';
@@ -1382,15 +1444,15 @@
         });
         bodyHtml += `</div>`;
       }
-      // E. 店家分組＋美食卡片 (京ばあむ & 藤菜美)
+      // ⭐ E. 店家分組＋美食卡片 (清水坂伴手禮 & 伏見稻荷名店)
       else if (m.type === 'storeGroupedMenu') {
-        bodyHtml += `<div class="space-y-4">`;
+        bodyHtml += `<div class="space-y-3.5">`;
         m.stores.forEach(st => {
           const navUrl = getMapNavUrl(st.query || st.name);
           bodyHtml += `
-            <div class="p-3.5 bg-white/80 rounded-2xl border border-gray-150 shadow-2xs space-y-2">
+            <div class="p-3.5 bg-white/85 rounded-2xl border border-gray-150 shadow-2xs space-y-2">
               <div class="flex items-start justify-between pb-2 border-b border-gray-100">
-                <div>
+                <div class="flex-1 pr-2">
                   <h4 class="font-black text-cocoa text-xs">${st.name}</h4>
                   <p class="text-[10px] text-cocoa-soft mt-0.5">⏰ 營業時間：${st.time}</p>
                 </div>
@@ -1402,9 +1464,9 @@
           `;
           st.items.forEach(it => {
             bodyHtml += `
-              <div class="py-2.5 px-3 bg-yellow-50/40 rounded-xl border border-yellow-200/70 flex flex-col items-center justify-center text-center">
+              <div class="py-2.5 px-3 bg-yellow-50/50 rounded-xl border border-yellow-200/70 flex flex-col items-center justify-center text-center">
                 <div class="text-sm font-black text-cocoa tracking-wide text-center">${it.jp}</div>
-                <div class="text-[11px] font-bold text-amber-900 bg-white px-2.5 py-0.5 rounded-full border border-yellow-200 mt-1 text-center">${it.cn}</div>
+                <div class="text-[11px] font-bold text-amber-900 bg-white/90 px-2.5 py-0.5 rounded-full border border-yellow-200/80 mt-1 text-center">${it.cn}</div>
               </div>
             `;
           });
@@ -1421,7 +1483,7 @@
       document.getElementById('dynamic-modal').classList.add('hidden');
     }
 
-    // 渲染清單 Modal (純 Checklist)
+    // 渲染清單 Modal
     function renderPrepModalContent() {
       const data = tripData.prep;
       let html = '';
